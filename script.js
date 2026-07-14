@@ -1,71 +1,101 @@
-/*=========================================
-        BrewNest Coffee Website
-        Author : Suchi Goel
-==========================================*/
+// ================================
+// SELECT ELEMENTS
+// ================================
 
-// =============================
-// MOBILE MENU
-// =============================
+let navbar = document.querySelector('.navbar');
+let searchForm = document.querySelector('.search-form');
+let cartItem = document.querySelector('.cart-items-container');
 
-const menuBtn = document.querySelector("#menu-btn");
-const navLinks = document.querySelector(".nav-links");
+let menuBtn = document.querySelector('#menu-btn');
+let searchBtn = document.querySelector('#search-btn');
+let cartBtn = document.querySelector('#cart-btn');
 
-if (menuBtn) {
-    menuBtn.addEventListener("click", () => {
-        navLinks.classList.toggle("active");
-    });
-}
+// ================================
+// MENU BUTTON
+// ================================
 
-// =============================
-// STICKY NAVBAR
-// =============================
+menuBtn.onclick = () => {
 
-const header = document.querySelector("header");
+    navbar.classList.toggle('active');
 
-window.addEventListener("scroll", () => {
+    searchForm.classList.remove('active');
+    cartItem.classList.remove('active');
 
-    if (window.scrollY > 80) {
-        header.classList.add("sticky");
-    } else {
-        header.classList.remove("sticky");
-    }
+};
 
-});
+// ================================
+// SEARCH BUTTON
+// ================================
 
-// =============================
-// DARK MODE
-// =============================
+searchBtn.onclick = () => {
 
-const themeBtn = document.getElementById("theme-btn");
+    searchForm.classList.toggle('active');
 
-if (themeBtn) {
+    navbar.classList.remove('active');
+    cartItem.classList.remove('active');
 
-    themeBtn.addEventListener("click", () => {
+};
 
-        document.body.classList.toggle("dark");
+// ================================
+// CART BUTTON
+// ================================
 
-        if (document.body.classList.contains("dark")) {
+cartBtn.onclick = () => {
 
-            themeBtn.classList.remove("fa-moon");
-            themeBtn.classList.add("fa-sun");
+    cartItem.classList.toggle('active');
 
-        } else {
+    navbar.classList.remove('active');
+    searchForm.classList.remove('active');
 
-            themeBtn.classList.remove("fa-sun");
-            themeBtn.classList.add("fa-moon");
+};
+
+// ================================
+// CLOSE ALL WHEN SCROLLING
+// ================================
+
+window.onscroll = () => {
+
+    navbar.classList.remove('active');
+    searchForm.classList.remove('active');
+    cartItem.classList.remove('active');
+
+};
+
+// ================================
+// SMOOTH SCROLL
+// ================================
+
+document.querySelectorAll('.navbar a').forEach(link => {
+
+    link.addEventListener('click', function (e) {
+
+        e.preventDefault();
+
+        const target = document.querySelector(this.getAttribute('href'));
+
+        if (target) {
+
+            window.scrollTo({
+
+                top: target.offsetTop - 80,
+                behavior: "smooth"
+
+            });
 
         }
 
+        navbar.classList.remove('active');
+
     });
 
-}
+});
 
-// =============================
-// ACTIVE NAVIGATION
-// =============================
+// ================================
+// ACTIVE NAVBAR LINK
+// ================================
 
 const sections = document.querySelectorAll("section");
-const navItems = document.querySelectorAll(".nav-links a");
+const navLinks = document.querySelectorAll(".navbar a");
 
 window.addEventListener("scroll", () => {
 
@@ -82,7 +112,7 @@ window.addEventListener("scroll", () => {
 
     });
 
-    navItems.forEach(link => {
+    navLinks.forEach(link => {
 
         link.classList.remove("active");
 
@@ -94,259 +124,75 @@ window.addEventListener("scroll", () => {
 
 });
 
-// =============================
-// SMOOTH SCROLL
-// =============================
+// ================================
+// HEADER SHADOW ON SCROLL
+// ================================
 
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-
-    anchor.addEventListener("click", function(e) {
-
-        e.preventDefault();
-
-        document.querySelector(this.getAttribute("href")).scrollIntoView({
-
-            behavior: "smooth"
-
-        });
-
-    });
-
-});
-
-// =============================
-// BACK TO TOP
-// =============================
-
-const topBtn = document.createElement("button");
-
-topBtn.innerHTML = "↑";
-topBtn.className = "top-btn";
-
-document.body.appendChild(topBtn);
+const header = document.querySelector(".header");
 
 window.addEventListener("scroll", () => {
 
-    if (window.scrollY > 400) {
+    if (window.scrollY > 50) {
 
-        topBtn.style.display = "block";
+        header.style.boxShadow = "0 10px 30px rgba(0,0,0,.4)";
 
     } else {
 
-        topBtn.style.display = "none";
+        header.style.boxShadow = "none";
 
     }
 
 });
 
-topBtn.addEventListener("click", () => {
+// ================================
+// BUTTON RIPPLE EFFECT
+// ================================
 
-    window.scrollTo({
+document.querySelectorAll(".btn").forEach(button => {
 
-        top: 0,
-        behavior: "smooth"
+    button.addEventListener("mouseenter", () => {
+
+        button.style.transform = "scale(1.05)";
+
+    });
+
+    button.addEventListener("mouseleave", () => {
+
+        button.style.transform = "scale(1)";
 
     });
 
 });
 
-// =============================
-// COUNTER ANIMATION
-// =============================
+// ================================
+// FADE-IN ANIMATION
+// ================================
 
-const counters = document.querySelectorAll(".counter");
+const observer = new IntersectionObserver(entries => {
 
-counters.forEach(counter => {
+    entries.forEach(entry => {
 
-    counter.innerText = "0";
+        if (entry.isIntersecting) {
 
-    const updateCounter = () => {
-
-        const target = +counter.getAttribute("data-target");
-        const current = +counter.innerText;
-
-        const increment = target / 150;
-
-        if (current < target) {
-
-            counter.innerText = `${Math.ceil(current + increment)}`;
-
-            setTimeout(updateCounter, 15);
-
-        } else {
-
-            counter.innerText = target;
-
-        }
-
-    };
-
-    updateCounter();
-
-});
-
-// =============================
-// SCROLL REVEAL
-// =============================
-
-const reveals = document.querySelectorAll(".reveal");
-
-window.addEventListener("scroll", reveal);
-
-function reveal() {
-
-    reveals.forEach(item => {
-
-        const windowHeight = window.innerHeight;
-
-        const revealTop = item.getBoundingClientRect().top;
-
-        const revealPoint = 120;
-
-        if (revealTop < windowHeight - revealPoint) {
-
-            item.classList.add("active");
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
 
         }
 
     });
 
-}
+}, {
 
-// =============================
-// COFFEE CARD HOVER
-// =============================
-
-const cards = document.querySelectorAll(".coffee-card");
-
-cards.forEach(card => {
-
-    card.addEventListener("mouseenter", () => {
-
-        card.style.transform = "translateY(-12px)";
-
-    });
-
-    card.addEventListener("mouseleave", () => {
-
-        card.style.transform = "translateY(0px)";
-
-    });
+    threshold: 0.2
 
 });
 
-// =============================
-// TESTIMONIAL SLIDER
-// =============================
+document.querySelectorAll(".box, .content, .image").forEach(item => {
 
-let slideIndex = 0;
+    item.style.opacity = "0";
+    item.style.transform = "translateY(50px)";
+    item.style.transition = ".8s ease";
 
-const testimonials = document.querySelectorAll(".testimonial");
-
-function showTestimonials() {
-
-    testimonials.forEach(slide => {
-
-        slide.style.display = "none";
-
-    });
-
-    slideIndex++;
-
-    if (slideIndex > testimonials.length) {
-
-        slideIndex = 1;
-
-    }
-
-    if (testimonials.length > 0) {
-
-        testimonials[slideIndex - 1].style.display = "block";
-
-    }
-
-    setTimeout(showTestimonials, 4000);
-
-}
-
-showTestimonials();
-
-// =============================
-// NEWSLETTER FORM
-// =============================
-
-const newsletter = document.querySelector("#newsletter-form");
-
-if (newsletter) {
-
-    newsletter.addEventListener("submit", function(e) {
-
-        e.preventDefault();
-
-        const email = this.querySelector("input").value;
-
-        if (email === "") {
-
-            alert("Please enter your email.");
-
-        } else {
-
-            alert("🎉 Thank you for subscribing!");
-
-            this.reset();
-
-        }
-
-    });
-
-}
-
-// =============================
-// CONTACT FORM
-// =============================
-
-const contactForm = document.querySelector("#contact-form");
-
-if (contactForm) {
-
-    contactForm.addEventListener("submit", function(e) {
-
-        e.preventDefault();
-
-        alert("✅ Your message has been sent successfully!");
-
-        contactForm.reset();
-
-    });
-
-}
-
-// =============================
-// LOADING SCREEN
-// =============================
-
-window.addEventListener("load", () => {
-
-    const loader = document.querySelector(".loader");
-
-    if (loader) {
-
-        loader.style.display = "none";
-
-    }
+    observer.observe(item);
 
 });
-
-// =============================
-// CURRENT YEAR
-// =============================
-
-const year = document.querySelector("#year");
-
-if (year) {
-
-    year.textContent = new Date().getFullYear();
-
-}
-
-console.log("☕ BrewNest Loaded Successfully!");
